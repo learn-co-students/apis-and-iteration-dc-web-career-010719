@@ -1,7 +1,8 @@
 require 'uri'
 
 def welcome
-  puts "welcome to star wars!\n-----\n"
+  puts "Welcome to the Star Wars API Search Engine\n"
+  puts "(vehicles not yet included)"
 end
 
 def get_input_from_user(input_type)
@@ -25,7 +26,8 @@ def get_movie_from_user
 end
 
 def get_input
-  puts "\nEnter Star Wars character or movie ([exit] to exit)"
+  puts "\n*****"
+  puts "Enter Star Wars character or movie ([exit] to exit)"
   puts "-----\n"
 
   return gets.chomp.downcase

@@ -2,9 +2,18 @@ require 'rest-client'
 require 'json'
 require 'pry'
 
+def get_star_wars_api(resource)
+  api_url = 'http://www.swapi.co/api/'
+  url = api_url + resource
+
+  response_string = RestClient.get(url)
+  return JSON.parse(response_string)
+end
+
 def get_character_movies_from_api(character_name)
-  response_string = RestClient.get('http://www.swapi.co/api/people/')
-  response_hash = JSON.parse(response_string)
+  # response_string = RestClient.get('http://www.swapi.co/api/people/')
+  # response_hash = JSON.parse(response_string)
+  response_hash = get_star_wars_api('people')
   films = []
 
   response_hash["results"].each do |result|
@@ -24,31 +33,32 @@ def get_film_from_api(api_url)
 end
 
 def get_film_info_from_api(film_name)
-  response_string = RestClient.get('http://www.swapi.co/api/films/')
-  response_hash = JSON.parse(response_string)
+  # response_string = RestClient.get('http://www.swapi.co/api/films/')
+  # response_hash = JSON.parse(response_string)
+  response_hash = get_star_wars_api('films')
 
   response_hash["results"].find do |result|
     result["title"].downcase == film_name.downcase
   end
 end
 
-def print_movies(films)
+def print_character_movies(films)
   films.each do |film| 
     title = film["title"]
-    release_date = film["release_date"]
+    release_year = film["release_date"].split('-')[0]
     director = film["director"]
-    puts "#{title} by #{director} (#{release_date})"
+    puts "#{title} by #{director} (#{release_year})"
   end
 end
 
 def print_movie(film)
   title = film["title"]
   episode = film["episode_id"]
-  release_date = film["release_date"]
+  release_year = film["release_date"].split('-')[0]
   director = film["director"]
 
   puts "Episode: #{episode}"
-  puts "Release Date: #{release_date}"
+  puts "Released: #{release_year}"
   puts "Director: #{director}"
 end
 
@@ -57,7 +67,7 @@ def show_character_movies(character)
   
   if films
     puts "\n#{character} Films:\n-----\n"
-    print_movies(films)
+    print_character_movies(films)
   else
     puts "\nNot a Valid Star Wars Character!\n"
   end
@@ -77,13 +87,15 @@ def show_movie_info(film)
 end
 
 def initialize_character_list
-  response_string = RestClient.get('http://www.swapi.co/api/people/')
-  response_hash = JSON.parse(response_string)
+  # response_string = RestClient.get('http://www.swapi.co/api/people/')
+  # response_hash = JSON.parse(response_string)
+  response_hash = get_star_wars_api('people')
   response_hash["results"].map { |result| result["name"] }
 end
 
 def initialize_film_list
-  response_string = RestClient.get('http://www.swapi.co/api/films/')
-  response_hash = JSON.parse(response_string)
+  # response_string = RestClient.get('http://www.swapi.co/api/films/')
+  # response_hash = JSON.parse(response_string)
+  response_hash = get_star_wars_api('films')
   response_hash["results"].map { |result| result["title"] }
 end
