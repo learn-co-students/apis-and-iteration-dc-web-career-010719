@@ -7,7 +7,7 @@ def get_character_json
 end
 def get_character_movies_from_api(character_name)
 response_hash = get_character_json
-   response_hash.each do |key|
+   response_hash["results"].each do |key|
      if key["name"] == character_name
        return key["films"]
      else return false
