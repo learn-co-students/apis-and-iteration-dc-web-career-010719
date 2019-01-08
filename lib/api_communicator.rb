@@ -3,31 +3,72 @@ require 'json'
 require 'pry'
 
 def get_character_movies_from_api(character_name)
-  #make the web request
   response_string = RestClient.get('http://www.swapi.co/api/people/')
   response_hash = JSON.parse(response_string)
+  films = []
 
-  # iterate over the response hash to find the collection of `films` for the given
-  #   `character`
-  # collect those film API urls, make a web request to each URL to get the info
-  #  for that film
-  # return value of this method should be collection of info about each film.
-  #  i.e. an array of hashes in which each hash reps a given film
-  # this collection will be the argument given to `print_movies`
-  #  and that method will do some nice presentation stuff like puts out a list
-  #  of movies by title. Have a play around with the puts with other info about a given film.
+  response_hash["results"].each do |result|
+    if result["name"].downcase == character_name
+      films = result["films"].map do |film_url|
+        get_film_from_api(film_url)
+      end
+    end
+  end
+
+  return films
+end
+
+def get_film_from_api(api_url)
+  response_string = RestClient.get(api_url)
+  return JSON.parse(response_string)
+end
+
+def get_film_info_from_api(film_name)
+  response_string = RestClient.get('http://www.swapi.co/api/films/')
+  response_hash = JSON.parse(response_string)
+
+  response_hash["results"].find do |result|
+    result["title"].downcase == film_name.downcase
+  end
 end
 
 def print_movies(films)
-  # some iteration magic and puts out the movies in a nice list
+  films.each do |film| 
+    title = film["title"]
+    release_date = film["release_date"]
+    director = film["director"]
+    puts "#{title} by #{director} (#{release_date})"
+  end
+end
+
+def print_movie(film)
+  title = film["title"]
+  release_date = film["release_date"]
+  director = film["director"]
+
+  puts "Title: #{title}"
+  puts "Release Date: #{release_date}"
+  puts "Director: #{director}"
 end
 
 def show_character_movies(character)
   films = get_character_movies_from_api(character)
-  print_movies(films)
+  
+  if films
+    puts "\nCharacter Films:\n-----\n"
+    print_movies(films)
+  else
+    puts "\nNot a Valid Star Wars Character!\n"
+  end
 end
 
-## BONUS
+def show_movie_info(film)
+  film_info = get_film_info_from_api(film)
+  puts "\nMovie Info:\n-----\n"
 
-# that `get_character_movies_from_api` method is probably pretty long. Does it do more than one job?
-# can you split it up into helper methods?
+  if film_info
+    print_movie(film_info)
+  else
+    puts "\nNo Star Wars Movie Found!\n"
+  end
+end
