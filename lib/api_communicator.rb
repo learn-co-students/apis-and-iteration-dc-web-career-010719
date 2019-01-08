@@ -21,7 +21,7 @@ def get_character_movies_from_api(character_name)
   end
 
   if film_urls == []
-    puts "Character not found. Please try again."
+    puts "Character not found. Please try again or type Exit to end the program."
     return "not_found"
   end
 
