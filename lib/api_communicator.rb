@@ -25,8 +25,13 @@ def get_character_movies_from_api(character_name)
   character = get_character_from_api(character_name)
 
   if character
-    return character["films"].map do |film_url|
+    films = character["films"].map do |film_url|
       get_film_from_api(film_url)
+    end
+
+    # sort by release date
+    return films.sort do |film_a,film_b| 
+      film_a["release_date"] <=> film_b["release_date"]
     end
   else
     return nil
