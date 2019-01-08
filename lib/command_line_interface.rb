@@ -1,6 +1,14 @@
 def welcome
   # puts out a welcome message here!
-  puts "Welcome!"
+  puts "*********************************************"
+  puts "** Welcome to the Star wars search engine! **"
+  puts "** This will tell you what people, planets **"
+  puts "**, species, vehicles and starships are in **"
+  puts "** certain films                           **"
+  puts "**                                         **"
+  puts "** Type exit to leave the program!!        **"
+  puts "*********************************************\n\n\n\n"
+
 end
 
 def get_from_user(name)
@@ -8,32 +16,20 @@ def get_from_user(name)
     name = "character"
   end
   puts "Please, enter a VALID #{name} name!"
-  # use gets to capture the user's input. This method should return that input, downcased.
-    #input = gets.chomp.split.map(&:capitalize)*' '
+
     input = gets.chomp
     while input.empty?
-      puts "Input is not valid. Try again!"
-      input = gets.chomp
+        puts "Input is not valid. Try again!"
+        input = gets.chomp
     end
     return input
 end
 
 
-# def get_character_from_user()
-#   puts "Please, enter a Valid character name!"
-#   # use gets to capture the user's input. This method should return that input, downcased.
-#     input = gets.chomp.split.map(&:capitalize)*' '
-#     while input.empty?
-#       puts "Input is not valid. Try again!"
-#       input = gets.chomp
-#     end
-#     return input
-# end
-
 
 def options()
-  array = ["people","planets", "species", "vehicles", "starships"]
-  puts "************************"
+  array = ["people","planets", "species", "vehicles", "starships", "exit"]
+  puts "\n\n\n\n************************"
   puts "people"
   puts "planets"
   puts "species"
@@ -48,9 +44,3 @@ def options()
   end
   return input
 end
-
-# def error_handling
-#   while get_character_from_user ==
-#     get_character_from_user
-#   end
-# end
