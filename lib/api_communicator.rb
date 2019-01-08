@@ -9,19 +9,13 @@ def get_character_movies_from_api(character_name)
   character_info = response_hash["results"].find {|character|
      character["name"] == character_name
      }
-     #   get_character_from_user
-    character_info["films"].map {|url|
-       url_hash(url)
-     }
+  # if user inputs a real character, call url_hash on film links
+     if !character_info.nil?
+       character_info["films"].map {|url|
+         url_hash(url)
+       }
+   end
 end
-# end
-# def nil_get
-#   "Not a character. Try again."
-#   input = gets.chomp
-#   get_character_movies_from_api(input)
-# end
-
-
   # iterate over the response hash to find the collection of `films` for the given
   #   `character`
   # collect those film API urls, make a web request to each URL to get the info
@@ -32,7 +26,7 @@ end
   #  and that method will do some nice presentation stuff like puts out a list
   #  of movies by title. Have a play around with the puts with other info about a given film.
 
-
+# makes web request for swapi links
 def url_hash(url)
   response_string = RestClient.get(url)
   JSON.parse(response_string)
@@ -41,16 +35,27 @@ end
 def print_movies(films)
   # some iteration magic and puts out the movies in a nice list
    films.each_with_index {|film, i|
-   puts "#{i+1}. "+film["title"]
+   puts "#{i+1}. " + film["title"]
   }
 
 end
 
 def show_character_movies(character)
+  # calls get_character_movies_from_api method and stores
+  # array of character movie data into 'films'
   films = get_character_movies_from_api(character)
-  puts "Here is your list of #{character} movies:\n\n"
-  print_movies(films)
-  
+  # while 'films' returns nil, prompts user for new input
+  while films.nil?
+    puts "That's not a character. Try again:"
+    character = gets.chomp
+   #stores new input into 'films'
+    films = get_character_movies_from_api(character)
+  end
+  # when 'films' does not return films, calls print_movies method
+  if !films.nil?
+    puts "\nHere is your list of #{character} movies:\n\n"
+    print_movies(films)
+  end
 end
 
 ## BONUS
