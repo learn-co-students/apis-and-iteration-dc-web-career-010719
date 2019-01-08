@@ -9,10 +9,10 @@ def get_character_movies_from_api(character_name)
 
   # iterate over the response hash to find the collection of `films` for the given
   #   `character`
-  
+
   film_urls = []
   response_hash["results"].each do |index|
-    if index["name"] == character_name
+    if index["name"].downcase == character_name
         film_urls = index["films"]
     end
   end
@@ -32,7 +32,7 @@ character_films
   #  of movies by title. Have a play around with the puts with other info about a given film.
 end
 
-# get_character_movies_from_api("Luke Skywalker")
+
 
 def print_movies(films)
   # some iteration magic and puts out the movies in a nice list
@@ -40,7 +40,7 @@ def print_movies(films)
     puts film_hash["title"]
   end
 end
-print_movies(get_character_movies_from_api("Luke Skywalker"))
+
 
 def show_character_movies(character)
   films = get_character_movies_from_api(character)
