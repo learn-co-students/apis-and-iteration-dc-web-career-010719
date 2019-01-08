@@ -14,7 +14,15 @@ def get_character_movies_from_api(character_name)
   response_hash["results"].each do |index|
     if index["name"].downcase == character_name
         film_urls = index["films"]
+    elsif character_name == "exit"
+      return "exit"
+
     end
+  end
+
+  if film_urls == []
+    puts "Character not found. Please try again."
+    return "not_found"
   end
 
   character_films = []
@@ -31,7 +39,6 @@ character_films
   #  and that method will do some nice presentation stuff like puts out a list
   #  of movies by title. Have a play around with the puts with other info about a given film.
 end
-
 
 
 def print_movies(films)
