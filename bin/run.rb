@@ -15,6 +15,8 @@ def get_match(input)
 
   # luke -> luke skywalker
   # empire strikes back -> the empire strikes back
+  # luuke skywelker -> luke skywalker
+  # new ope -> a new hope
   
   match = nil
 
@@ -48,6 +50,10 @@ def get_match(input)
     end
   end
 
+  if match.nil?
+    match = input
+  end
+
   return match
 end
 
@@ -64,7 +70,7 @@ def run
   elsif $films.include?(input)
     show_movie_info(input)
   else
-    puts "Not a valid Star Wars character or movie, ya dunce!"
+    show_character_movies(input)
   end
 end
 

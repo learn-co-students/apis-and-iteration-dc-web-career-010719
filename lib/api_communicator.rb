@@ -2,29 +2,42 @@ require 'rest-client'
 require 'json'
 require 'pry'
 
-def get_star_wars_api(resource)
+def get_star_wars_api(resource, query=nil)
   api_url = 'http://www.swapi.co/api/'
   url = api_url + resource
+
+  if query
+    url += '?search=' + query
+  end
 
   response_string = RestClient.get(url)
   return JSON.parse(response_string)
 end
 
-def get_character_movies_from_api(character_name)
-  # response_string = RestClient.get('http://www.swapi.co/api/people/')
-  # response_hash = JSON.parse(response_string)
-  response_hash = get_star_wars_api('people')
-  films = []
-
-  response_hash["results"].each do |result|
-    if result["name"].downcase == character_name.downcase
-      films = result["films"].map do |film_url|
-        get_film_from_api(film_url)
-      end
-    end
+def get_character_from_api(character_name)
+  characters = search_characters(character_name)
+  if characters
+    return characters[0]
   end
+end
 
-  return films
+def get_character_movies_from_api(character_name)
+  character = get_character_from_api(character_name)
+
+  if character
+    return character["films"].map do |film_url|
+      get_film_from_api(film_url)
+    end
+  else
+    return nil
+  end
+end
+
+def get_character_name_from_api(character_name)
+  character = get_character_from_api(character_name)
+  if character
+    return character["name"]
+  end
 end
 
 def get_film_from_api(api_url)
@@ -33,13 +46,19 @@ def get_film_from_api(api_url)
 end
 
 def get_film_info_from_api(film_name)
-  # response_string = RestClient.get('http://www.swapi.co/api/films/')
-  # response_hash = JSON.parse(response_string)
   response_hash = get_star_wars_api('films')
 
   response_hash["results"].find do |result|
     result["title"].downcase == film_name.downcase
   end
+end
+
+def search_characters(character_name)
+  get_star_wars_api('people', character_name)["results"]
+end
+
+def search_character_names(character_name)
+  search_characters(character_name).map { |character| character["name"] }
 end
 
 def print_character_movies(films)
@@ -64,9 +83,10 @@ end
 
 def show_character_movies(character)
   films = get_character_movies_from_api(character)
+  character_name = get_character_name_from_api(character)
   
   if films
-    puts "\n#{character} Films:\n-----\n"
+    puts "\n#{character_name} Films:\n-----\n"
     print_character_movies(films)
   else
     puts "\nNot a Valid Star Wars Character!\n"
@@ -87,15 +107,11 @@ def show_movie_info(film)
 end
 
 def initialize_character_list
-  # response_string = RestClient.get('http://www.swapi.co/api/people/')
-  # response_hash = JSON.parse(response_string)
   response_hash = get_star_wars_api('people')
   response_hash["results"].map { |result| result["name"] }
 end
 
 def initialize_film_list
-  # response_string = RestClient.get('http://www.swapi.co/api/films/')
-  # response_hash = JSON.parse(response_string)
   response_hash = get_star_wars_api('films')
   response_hash["results"].map { |result| result["title"] }
 end
