@@ -9,18 +9,38 @@ def get_character_movies_from_api(character_name)
 
   # iterate over the response hash to find the collection of `films` for the given
   #   `character`
+  
+  film_urls = []
+  response_hash["results"].each do |index|
+    if index["name"] == character_name
+        film_urls = index["films"]
+    end
+  end
+
+  character_films = []
+  film_urls.each do |url|
+    film_info = RestClient.get(url)
+    character_films << JSON.parse(film_info)
+  end
+character_films
   # collect those film API urls, make a web request to each URL to get the info
   #  for that film
   # return value of this method should be collection of info about each film.
-  #  i.e. an array of hashes in which each hash reps a given film
+  #  i.e. an array of hashes in which each hash reps a given film.
   # this collection will be the argument given to `print_movies`
   #  and that method will do some nice presentation stuff like puts out a list
   #  of movies by title. Have a play around with the puts with other info about a given film.
 end
 
+# get_character_movies_from_api("Luke Skywalker")
+
 def print_movies(films)
   # some iteration magic and puts out the movies in a nice list
+  films.each do |film_hash|
+    puts film_hash["title"]
+  end
 end
+print_movies(get_character_movies_from_api("Luke Skywalker"))
 
 def show_character_movies(character)
   films = get_character_movies_from_api(character)
