@@ -18,10 +18,6 @@ def run
   end
 
   return input
-  
-  # if !['c','m', 'f'].include?(input)
-  #   exit_cli
-  # end
 end
 
 welcome
@@ -29,6 +25,3 @@ input = nil
 while input != 'e'
   input = run
 end
-
-# character = get_character_from_user
-# show_character_movies(character)
