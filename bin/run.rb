@@ -3,25 +3,56 @@
 require_relative "../lib/api_communicator.rb"
 require_relative "../lib/command_line_interface.rb"
 
-def run
-  input = choose_menu
+$characters = initialize_character_list
+$films = initialize_film_list
+$all = $characters + $films
 
-  if input == 'c'
-    puts "\n"
-    character = get_character_from_user
-    show_character_movies(character)
-  elsif input == 'm' || input == 'f'
-    puts "\n"
-    movie = get_movie_from_user
-    show_movie_info(movie)
-  elsif input == 'a'
+def get_match(input)
+  # attempts to find best match
+  # of character or movie
+
+  # luke -> luke skywalker
+  # empire strikes back -> the empire strikes back
+  
+  match = nil
+
+  match = $all.find do |character|
+    character.downcase == input
   end
 
-  return input
+  if match.nil?
+    match = $all.find do |character|
+      character.downcase.start_with?(input)
+    end
+  end
+
+  if match.nil?
+    match = $all.find do |character|
+      character.downcase.end_with?(input)
+    end
+  end
+
+  return match
+end
+
+def run
+  input = get_input
+  if input == "exit"
+    exit
+  end
+
+  input = get_match(input)
+
+  if $characters.include?(input)
+    show_character_movies(input)
+  elsif $films.include?(input)
+    show_movie_info(input)
+  else
+    puts "Not a valid Star Wars character or movie, ya dunce!"
+  end
 end
 
 welcome
-input = nil
-while input != 'e'
-  input = run
+while true
+  run
 end

@@ -8,7 +8,7 @@ def get_character_movies_from_api(character_name)
   films = []
 
   response_hash["results"].each do |result|
-    if result["name"].downcase == character_name
+    if result["name"].downcase == character_name.downcase
       films = result["films"].map do |film_url|
         get_film_from_api(film_url)
       end
@@ -43,10 +43,11 @@ end
 
 def print_movie(film)
   title = film["title"]
+  episode = film["episode_id"]
   release_date = film["release_date"]
   director = film["director"]
 
-  puts "Title: #{title}"
+  puts "Episode: #{episode}"
   puts "Release Date: #{release_date}"
   puts "Director: #{director}"
 end
@@ -55,7 +56,7 @@ def show_character_movies(character)
   films = get_character_movies_from_api(character)
   
   if films
-    puts "\nCharacter Films:\n-----\n"
+    puts "\n#{character} Films:\n-----\n"
     print_movies(films)
   else
     puts "\nNot a Valid Star Wars Character!\n"
@@ -64,11 +65,25 @@ end
 
 def show_movie_info(film)
   film_info = get_film_info_from_api(film)
-  puts "\nMovie Info:\n-----\n"
+  title = film_info["title"]
+
+  puts "\n#{title}:\n-----\n"
 
   if film_info
     print_movie(film_info)
   else
     puts "\nNo Star Wars Movie Found!\n"
   end
+end
+
+def initialize_character_list
+  response_string = RestClient.get('http://www.swapi.co/api/people/')
+  response_hash = JSON.parse(response_string)
+  response_hash["results"].map { |result| result["name"] }
+end
+
+def initialize_film_list
+  response_string = RestClient.get('http://www.swapi.co/api/films/')
+  response_hash = JSON.parse(response_string)
+  response_hash["results"].map { |result| result["title"] }
 end

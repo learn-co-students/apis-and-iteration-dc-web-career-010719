@@ -24,12 +24,9 @@ def get_movie_from_user
   return get_input_from_user('movie')
 end
 
-def choose_menu
-  puts "\nchoose from the following:"
-  puts "[c]haracter"
-  puts "[m]ovie/[f]ilm"
-  puts "[e]xit"
-  puts "\n"
+def get_input
+  puts "\nEnter Star Wars character or movie ([exit] to exit)"
+  puts "-----\n"
 
-  return gets.chomp.downcase[0]
+  return gets.chomp.downcase
 end
