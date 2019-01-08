@@ -30,14 +30,15 @@ end
 
 def print_movies(films)
   # some iteration magic and puts out the movies in a nice list
+  puts "\nThey star in:\n"
   films.each do |movie|
-    puts "\n\n#{movie["title"]}"
+    puts "#{movie["title"]}\n"
   end
 end
 
 def get_json(url)
   url_string = RestClient.get(url)
-  url_hash = JSON.parse(url_string)
+  JSON.parse(url_string)
 end
 
 def show_character_movies(character)
