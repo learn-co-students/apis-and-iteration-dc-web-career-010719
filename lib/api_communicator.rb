@@ -7,13 +7,13 @@ def get_character_json
 end
 def get_character_movies_from_api(character_name)
 response_hash = get_character_json
-   response_hash["results"].each do |key|
+   response_hash.each do |key|
      if key["name"] == character_name
        return key["films"]
      else return false
      end
    end
-end   
+end
   # iterate over the response hash to find the collection of `films` for the given
   #   `character`
   # collect those film API urls, make a web request to each URL to get the info
